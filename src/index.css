@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.underweight {
+  color: purple;
+}
+
+.normal {
+  color: green;
+}
+
+.overweight {
+  color: rgb(236, 126, 0);
+}
+
+.obese {
+  color: red;
+}

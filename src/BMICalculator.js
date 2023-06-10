@@ -8,7 +8,6 @@ function UnitSelector() {
 
   useEffect(() => {
     const userLanguage = navigator.language.toLowerCase();
-
     const isUserFromUS = userLanguage === 'en-us';
 
     if (isUserFromUS) {
@@ -44,7 +43,7 @@ function UnitSelector() {
           onChange={(e) => setUnit({ ...unit, height: e.target.value })}
         >
           <option value="cm">cm</option>
-          <option value="ft/in">ft/in</option>
+          <option value="in">in</option>
         </select>
       </div>
     </div>
@@ -57,23 +56,37 @@ function BMICalculator() {
     height: ''
   });
   const [bmi, setBMI] = useState(null);
+  const [bmiCategory, setBMICategory] = useState('');
 
   const calculateBMI = () => {
     if (unit.weight && unit.height) {
       const weight = parseFloat(unit.weight);
       let height = parseFloat(unit.height);
-  
-      if (unit.height === 'ft/in') {
+
+      if (unit.height === 'in') {
         const feet = parseFloat(unit.feet);
         const inches = parseFloat(unit.inches);
         height = feet * 12 + inches;
       }
-  
+
       const bmiValue = (weight / (height * height)) * 703;
-  
       setBMI(bmiValue.toFixed(2));
+      colorBMI(bmiValue);
     } else {
       setBMI(null);
+      setBMICategory('');
+    }
+  };
+
+  const colorBMI = (bmi) => {
+    if (bmi < 18.5) {
+      setBMICategory('underweight');
+    } else if (bmi >= 18.5 && bmi < 25) {
+      setBMICategory('normal');
+    } else if (bmi >= 25 && bmi < 30) {
+      setBMICategory('overweight');
+    } else {
+      setBMICategory('obese');
     }
   };
 
@@ -84,8 +97,8 @@ function BMICalculator() {
   };
 
   return (
-   <div>
-     <h1>BMI Calculator</h1>
+    <div>
+      <h1>BMI Calculator</h1>
       <UnitSelector />
       <div>
         <label>Weight ({unit.weight}):</label>
@@ -96,14 +109,13 @@ function BMICalculator() {
         />
       </div>
       <div>
-      <label>
-            Height (
-            {unit.height === 'ft/in'
-              ? convertToFeetAndInches(unit.feet)
-              : unit.height}
-            ):
-      </label>
-        {unit.height === 'ft/in' ? (
+        <label>
+          Height (
+          {unit.height  ? convertToFeetAndInches(unit.feet)
+          : unit.height}
+        ):
+        </label>
+        {unit.height === 'in' ? (
           <div>
             <input
               type="number"
@@ -127,10 +139,18 @@ function BMICalculator() {
         )}
       </div>
       <button onClick={calculateBMI}>Calculate BMI</button>
-      <p>Your BMI is: {bmi}</p>
-   
-   </div>
-  )
+      {bmi && (
+        <p id="colorBMI" className={`bmi ${bmiCategory}`}>
+          Your BMI is: {bmi}
+        </p>
+      )}
+      {bmiCategory && (
+        <p id="bmiCategory" className={`bmi-category ${bmiCategory}`}>
+          BMI Category: {bmiCategory}
+        </p>
+      )}
+    </div>
+  );
 }
 
 export default BMICalculator;
