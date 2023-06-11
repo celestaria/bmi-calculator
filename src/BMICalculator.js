@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-function UnitSelector() {
+function UnitSelector({ onUnitChange }) {
   const [unit, setUnit] = useState({
     weight: 'kg',
-    height: 'cm'
+    height: 'cm',
   });
 
   useEffect(() => {
@@ -13,15 +13,15 @@ function UnitSelector() {
     if (isUserFromUS) {
       setUnit({
         weight: 'lb',
-        height: 'ft/in'
+        height: 'in', 
       });
     } else {
       setUnit({
         weight: 'kg',
-        height: 'cm'
+        height: 'cm',
       });
     }
-  }, []);
+  }, [navigator.language]);
 
   return (
     <div>
@@ -53,7 +53,7 @@ function UnitSelector() {
 function BMICalculator() {
   const [unit, setUnit] = useState({
     weight: '',
-    height: ''
+    height: '',
   });
   const [bmi, setBMI] = useState(null);
   const [bmiCategory, setBMICategory] = useState('');
@@ -99,7 +99,7 @@ function BMICalculator() {
   return (
     <div>
       <h1>BMI Calculator</h1>
-      <UnitSelector />
+      <UnitSelector onUnitChange={setUnit} />
       <div>
         <label>Weight ({unit.weight}):</label>
         <input
@@ -111,8 +111,9 @@ function BMICalculator() {
       <div>
         <label>
           Height (
-          {unit.height  ? convertToFeetAndInches(unit.feet)
-          : unit.height}
+            {unit.height
+            ? convertToFeetAndInches(unit.feet)
+            : unit.height}
         ):
         </label>
         {unit.height === 'in' ? (
