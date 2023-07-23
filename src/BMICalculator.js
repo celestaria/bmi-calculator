@@ -93,7 +93,7 @@ function BMICalculator() {
   const convertToFeetAndInches = (height) => {
     const feet = Math.floor(height / 12);
     const inches = height % 12;
-    return `${feet} ft ${inches} in`;
+    return `${inches} in`;
   };
 
   return (
